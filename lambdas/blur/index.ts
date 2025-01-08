@@ -6,7 +6,7 @@ import { S3Message } from '../common/types'
 import { SendMessageCommand, SendMessageCommandInput, SQSClient } from "@aws-sdk/client-sqs"
 
 const QUEUE_URL = process.env.QUEUE_URL
-const PROCESS = "resize"
+const PROCESS = "blur"
 
 export const handler: SQSHandler = async(event: SQSEvent) => {
     console.log(`SQS Event: ${JSON.stringify(event, null, 2)}`)
@@ -25,20 +25,9 @@ export const handler: SQSHandler = async(event: SQSEvent) => {
 
         // 2. edit
         const image = await getImageFromS3(s3Client, bucketName, key)
-        const width = image.width
-        const height = image.height
-    
-        console.log(`original size: (${width} ${height})`)
-    
-        const resizeWidth = Math.floor(width / 2)
-        const resizeHeight = Math.floor(height / 2)
-    
-        console.log(`${PROCESS}: (${resizeWidth} ${resizeHeight})`)
-    
-        image.resize({
-            w: resizeWidth,
-            h: resizeHeight
-        })
+        const blur = 10
+        console.log(`${PROCESS} the image for ${key}, degree: ${blur}`)
+        image.blur(blur)
 
         // 3. upload
         const mime = getValidMime(image.mime!)
