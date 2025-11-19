@@ -1,7 +1,7 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { AbstractS3Stack } from './abstract-s3-stack';
-import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
+import * as cdk from 'aws-cdk-lib'
+import { Bucket, type IBucket } from 'aws-cdk-lib/aws-s3'
+import type { Construct } from 'constructs'
+import { AbstractS3Stack } from './abstract-s3-stack'
 
 export class S3Bucket extends AbstractS3Stack {
   create(scope: Construct, prefix: string): IBucket {
@@ -9,6 +9,6 @@ export class S3Bucket extends AbstractS3Stack {
       bucketName: prefix,
       autoDeleteObjects: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
-    });
+    })
   }
 }

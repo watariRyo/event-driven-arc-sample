@@ -8,9 +8,12 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "lint": "biome lint .",
+    "format": "biome format --write ."
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.3.6",
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
     "aws-cdk": "2.173.4",
@@ -24,5 +27,8 @@
     "constructs": "^10.0.0",
     "dotenv": "^16.4.7",
     "esbuild": "^0.24.2"
+  },
+  "volta": {
+    "node": "22.10.0"
   }
 }

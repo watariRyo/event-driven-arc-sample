@@ -1,9 +1,11 @@
-import { Construct } from 'constructs';
-import { AbstractLambdaStack } from './abstract-lambda-function';
-import path = require('path');
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { Duration } from 'aws-cdk-lib';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Construct } from 'constructs'
+import { AbstractLambdaStack } from './abstract-lambda-function'
+
+import path = require('path')
+
+import { Duration } from 'aws-cdk-lib'
+import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 
 export class GrayscaleLambda extends AbstractLambdaStack {
   create(scope: Construct, prefix: string, entry: string): NodejsFunction {
@@ -14,6 +16,6 @@ export class GrayscaleLambda extends AbstractLambdaStack {
       runtime: Runtime.NODEJS_22_X,
       memorySize: 128,
       timeout: Duration.seconds(30),
-    });
+    })
   }
 }

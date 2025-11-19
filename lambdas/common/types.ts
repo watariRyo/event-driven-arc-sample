@@ -1,4 +1,4 @@
 export type S3Message = {
-    bucketName: string
-    key: string
+  bucketName: string
+  key: string
 }

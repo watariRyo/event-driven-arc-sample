@@ -27,3 +27,4 @@ LambdaHandler がすべて SQS になると同時に、SQS の色々機能の恩
 ### Todo？
 
 - id やクラス名など命名や設定が適当すぎること
+- Lambdaにもpackage-lock.jsonが発生してしまうこと（Workspace使わなかったこと）
