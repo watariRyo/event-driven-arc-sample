@@ -12,45 +12,89 @@ on:
   workflow_dispatch:
 
 jobs:
-  aws_cdk:
+  # Pull Request時に差分をチェックするジョブ
+  diff:
+    # masterブランチへのpull_requestの場合のみ実行
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
+    name: CDK Diff
     runs-on: ubuntu-latest
-    env: 
-      AWS_REGION: "ap-northeast-1"
-    
     permissions:
       id-token: write
       contents: read
-
+    env: 
+      AWS_REGION: "ap-northeast-1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: 'package.json'
           cache: 'npm'
-
       - name: Install dependencies
         run: npm ci
-
       - name: Assume Role
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }} 
           aws-region: ${{ env.AWS_REGION }}
-          
-      - name: CDK Diff Check
-        # masterブランチへのpull_requestの場合のみ実行
-        if: github.event_name == 'pull_request' && github.base_ref == 'master'
+      - name: Run CDK Diff
         run: npm run cdk:diff
 
-      - name: CDK Deploy
-        # masterブランチへのpushの場合のみ実行
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+  # masterブランチへのPush時にデプロイするジョブ
+  deploy:
+    # masterブランチへのpushの場合のみ実行
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    name: CDK Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env: 
+      AWS_REGION: "ap-northeast-1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Assume Role
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }} 
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Run CDK Deploy
         run: npm run cdk:deploy
 
-      - name: CDK Destroy
-        # 手動実行の場合のみ実行
-        if: github.event_name == 'workflow_dispatch'
+  # 手動実行時にインフラを削除するジョブ
+  destroy:
+    # 手動実行の場合のみ実行
+    if: github.event_name == 'workflow_dispatch'
+    name: CDK Destroy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env: 
+      AWS_REGION: "ap-northeast-1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Assume Role
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }} 
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Run CDK Destroy
         run: npm run cdk:destroy
