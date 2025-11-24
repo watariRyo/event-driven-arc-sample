@@ -17,7 +17,8 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "cdk:diff": "cdk diff",
-    "cdk:deploy": "cdk deploy --require-approval never"
+    "cdk:deploy": "cdk deploy --require-approval never",
+    "cdk:destroy": "cdk destroy --force"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.6",

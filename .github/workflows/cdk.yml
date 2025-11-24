@@ -44,4 +44,4 @@ jobs:
 
       - name: CDK Destroy
         if: github.ref == 'refs/heads/destroy'
-        run: npm run cdk -- destroy --force
+        run: npm run cdk:destroy
