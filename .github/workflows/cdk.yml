@@ -1,11 +1,16 @@
+
 name: cdk
 
 on:
   push:
     branches:
         - master
-        - destroy
   pull_request:
+    branches:
+        - master
+  # 手動実行を許可する
+  workflow_dispatch:
+
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -36,13 +41,16 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           
       - name: CDK Diff Check
-        if: contains(github.event_name, 'pull_request')
+        # masterブランチへのpull_requestの場合のみ実行
+        if: github.event_name == 'pull_request' && github.base_ref == 'master'
         run: npm run cdk:diff
 
       - name: CDK Deploy
-        if: contains(github.event_name, 'push')
+        # masterブランチへのpushの場合のみ実行
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: npm run cdk:deploy
 
       - name: CDK Destroy
-        if: github.ref == 'refs/heads/destroy'
+        # 手動実行の場合のみ実行
+        if: github.event_name == 'workflow_dispatch'
         run: npm run cdk:destroy
