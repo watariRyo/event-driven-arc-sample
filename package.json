@@ -1,16 +1,23 @@
 {
   "name": "eda",
   "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "lambdas/*"
+  ],
   "bin": {
     "eda": "bin/eda.js"
   },
   "scripts": {
+    "postinstall": "npm run build -ws --if-present",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
     "lint": "biome lint .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "cdk:diff": "cdk diff",
+    "cdk:deploy": "cdk deploy --require-approval never"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.6",
